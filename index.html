@@ -32,6 +32,8 @@
       color: white;
       position: relative;
       z-index: 1;
+      user-select: none;
+      pointer-events: none;
     }
 
     .pfp {
@@ -58,10 +60,9 @@
 </head>
 <body>
 
-  <!-- particles.js container -->
   <div id="particles-js"></div>
 
-  <!-- Your card -->
+  
   <div class="card">
     <a href="" target="_blank">
       <img class="pfp" src="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png?size=512" alt="Profile Picture">
@@ -69,8 +70,7 @@
     <div class="info">hiya, i'm kraeb</div>
     <div class="info">programmer or something</div>
   </div>
-
-  <!-- particles.js script -->
+  
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
     particlesJS("particles-js", {
