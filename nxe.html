@@ -56,7 +56,7 @@
       blades.forEach((blade, i) => {
         const offset = i - activeIndex;
 
-        let translateX = offset * 160;
+        let translateX = offset * 255;
         let scale = 1 - Math.abs(offset) * 0.08;
         let zIndex = 3 - Math.abs(offset);
 
