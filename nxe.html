@@ -5,87 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kraeb NXE</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  background: url('nxebg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: black;
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-    }
+#boot-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  background: black;
+  z-index: 9999;
+}
 
-    #boot-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: 999;
-      background: black;
-    }
+#dashboard {
+  display: none;
+}
 
-    #dashboard-wrapper {
-      display: none;
-    }
+.dashboard {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-180px);
+}
 
-    .dashboard {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: translateX(-180px);
-    }
+.blade {
+  position: absolute;
+  width: 380px;
+  height: 260px;
+  background: linear-gradient(to bottom, #cdee4b 0%, #a2d831 100%);
+  border: 3px solid #8cb529;
+  color: #f0f5cc;
+  border-radius: 2rem;
+  box-shadow:
+    0 10px 20px rgba(205, 238, 75, 0.4),
+    inset 0 -4px 10px #e3f07b;
+  transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
 
-    .blade {
-      position: absolute;
-      width: 380px;
-      height: 260px;
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-      border: 2px solid #28a745;
-      color: #28a745;
-      border-radius: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      transition: transform 0.3s ease, z-index 0.3s ease;
-      box-shadow: 0 0 12px rgba(0, 128, 0, 0.5);
-    }
+.blade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 60%, rgba(30, 30, 30, 0.3) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
 
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, #cdee4b, #a2d831);
-      z-index: -2;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, rgba(20, 20, 20, 0.4), rgba(10, 10, 10, 0.3));
-      z-index: -1;
-    }
+.blade:hover {
+  box-shadow:
+    0 12px 28px rgba(205, 238, 75, 0.8),
+    inset 0 -5px 15px #f4ff9c,
+    0 0 18px #cdee4b;
+  transform: scale(1.05);
+}
   </style>
 </head>
 <body>
+
   <video id="boot-video" autoplay muted playsinline>
     <source src="boot.mp4" type="video/mp4" />
   </video>
 
-  <div id="dashboard-wrapper">
+  <div id="dashboard">
     <div class="dashboard">
       <div class="blade">Home</div>
       <div class="blade">Games</div>
@@ -118,6 +111,8 @@
       });
     }
 
+    updateBlades();
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') {
         activeIndex = Math.min(blades.length - 1, activeIndex + 1);
@@ -133,12 +128,11 @@
     });
 
     const bootVideo = document.getElementById('boot-video');
-    const dashboardWrapper = document.getElementById('dashboard-wrapper');
+    const dashboard = document.getElementById('dashboard');
 
     bootVideo.addEventListener('ended', () => {
       bootVideo.style.display = 'none';
-      dashboardWrapper.style.display = 'block';
-      updateBlades();
+      dashboard.style.display = 'block';
     });
   </script>
 </body>
