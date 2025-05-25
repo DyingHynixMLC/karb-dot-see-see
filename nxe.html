@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kraeb NXE</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #1a1a1a, #2c2c2c);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .tile {
+      background: linear-gradient(135deg, #0a790a, #0d530d);
+      padding: 2rem;
+      border-radius: 1.5rem;
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .tile:hover, .tile.active {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+    }
+
+    .tile:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="tile active">Profile</div>
+    <div class="tile">Projects</div>
+    <div class="tile">GitHub</div>
+    <div class="tile">Discord</div>
+    <div class="tile">About Me</div>
+  </div>
+</body>
+</html>
