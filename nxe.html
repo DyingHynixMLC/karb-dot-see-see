@@ -15,30 +15,30 @@ body {
   overflow: hidden;
 }
 
-    .dashboard {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: translateX(-100px);
-    }
+.dashboard {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-180px);
+}
 
-    .blade {
-      position: absolute;
-      width: 380px;
-      height: 260px;
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-      border: 2px solid #3b3b3b;
-      color: white;
-      border-radius: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      transition: transform 0.3s ease, z-index 0.3s ease;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-    }
+.blade {
+  position: absolute;
+  width: 380px;
+  height: 260px;
+  background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+  border: 2px solid #28a745;
+  color: #28a745;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  box-shadow: 0 0 12px rgba(0, 128, 0, 0.5);
+}
   </style>
 </head>
 <body>
@@ -53,6 +53,14 @@ body {
   <script>
     const blades = document.querySelectorAll('.blade');
     let activeIndex = 0;
+
+    const bladeLinks = {
+      Home: 'https://kraeb.cc',
+      Games: 'games.html',
+      Media: 'media.html',
+      Settings: 'settings.html',
+      Profile: 'profile.html'
+    };
 
     function updateBlades() {
       blades.forEach((blade, i) => {
@@ -76,6 +84,10 @@ body {
       } else if (e.key === 'ArrowLeft') {
         activeIndex = Math.max(0, activeIndex - 1);
         updateBlades();
+      } else if (e.key === 'Enter') {
+        const activeBladeText = blades[activeIndex].textContent.trim();
+        const url = bladeLinks[activeBladeText];
+        if (url) window.location.href = url;
       }
     });
   </script>
