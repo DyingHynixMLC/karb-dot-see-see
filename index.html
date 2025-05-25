@@ -59,12 +59,14 @@
     }
 
     body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('background.jpg') no-repeat center center fixed;
-  background-size: cover;
-}
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
   </style>
 </head>
 <body>
@@ -81,6 +83,9 @@
   
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
+    const backgrounds = ["background.jpg", "borealis.jpg", "boreaalis.jpg"];
+    const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    document.body.style.backgroundImage = `url('${randomImage}')`;
     particlesJS("particles-js", {
       "particles": {
         "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
