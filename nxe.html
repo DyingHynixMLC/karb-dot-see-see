@@ -2,82 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kraeb NXE</title>
   <style>
-body {
-  margin: 0;
-  padding: 0;
-  background: url('nxebg.jpg') no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
-}
-
-#boot-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  background: black;
-  z-index: 9999;
-}
-
-#dashboard {
-  display: none;
-}
-
-.dashboard {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateX(-180px);
-}
-
-.blade {
-  position: absolute;
-  width: 380px;
-  height: 260px;
-  background: linear-gradient(to bottom, #cdee4b 0%, #a2d831 100%);
-  border: 3px solid #8cb529;
-  color: #f0f5cc;
-  border-radius: 2rem;
-  box-shadow:
-    0 10px 20px rgba(205, 238, 75, 0.4),
-    inset 0 -4px 10px #e3f07b;
-  transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.blade::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 60%, rgba(30, 30, 30, 0.3) 100%);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.blade:hover {
-  box-shadow:
-    0 12px 28px rgba(205, 238, 75, 0.8),
-    inset 0 -5px 15px #f4ff9c,
-    0 0 18px #cdee4b;
-  transform: scale(1.05);
-}
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('nxebg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+    #boot-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: black;
+      z-index: 9999;
+    }
+    #dashboard {
+      display: none;
+    }
+    .dashboard {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-180px);
+    }
+    .blade {
+      position: absolute;
+      width: 380px;
+      height: 260px;
+      background: linear-gradient(to bottom, #cdee4b 0%, #a2d831 100%);
+      border: 3px solid #8cb529;
+      color: #f0f5cc;
+      border-radius: 2rem;
+      box-shadow:
+        0 10px 20px rgba(205, 238, 75, 0.4),
+        inset 0 -4px 10px #e3f07b;
+      transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      overflow: hidden;
+      font-size: 2.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .blade::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 60%, rgba(30, 30, 30, 0.3) 100%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .blade:hover {
+      box-shadow:
+        0 12px 28px rgba(205, 238, 75, 0.8),
+        inset 0 -5px 15px #f4ff9c,
+        0 0 18px #cdee4b;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
-
   <video id="boot-video" autoplay muted playsinline>
     <source src="boot.mp4" type="video/mp4" />
   </video>
-
   <div id="dashboard">
     <div class="dashboard">
       <div class="blade">Home</div>
@@ -87,11 +85,11 @@ body {
       <div class="blade">Profile</div>
     </div>
   </div>
-
   <script>
+    const bootVideo = document.getElementById('boot-video');
+    const dashboard = document.getElementById('dashboard');
     const blades = document.querySelectorAll('.blade');
     let activeIndex = 0;
-
     const bladeLinks = {
       Home: 'https://kraeb.cc',
       Games: 'games.html',
@@ -99,7 +97,6 @@ body {
       Settings: 'settings.html',
       Profile: 'profile.html'
     };
-
     function updateBlades() {
       blades.forEach((blade, i) => {
         const offset = i - activeIndex;
@@ -110,29 +107,43 @@ body {
         blade.style.zIndex = zIndex;
       });
     }
-
     updateBlades();
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') {
+    document.addEventListener('keydown', e => {
+      if(e.key === 'ArrowRight'){
         activeIndex = Math.min(blades.length - 1, activeIndex + 1);
         updateBlades();
-      } else if (e.key === 'ArrowLeft') {
+      } else if(e.key === 'ArrowLeft'){
         activeIndex = Math.max(0, activeIndex - 1);
         updateBlades();
-      } else if (e.key === 'Enter') {
-        const activeBladeText = blades[activeIndex].textContent.trim();
-        const url = bladeLinks[activeBladeText];
-        if (url) window.location.href = url;
+      } else if(e.key === 'Enter'){
+        const url = bladeLinks[blades[activeIndex].textContent.trim()];
+        if(url) window.location.href = url;
       }
     });
-
-    const bootVideo = document.getElementById('boot-video');
-    const dashboard = document.getElementById('dashboard');
-
+    async function tryPlayVideo() {
+      try {
+        await bootVideo.play();
+      } catch {
+        bootVideo.muted = true;
+        await bootVideo.play();
+        function unmute() {
+          bootVideo.muted = false;
+          document.removeEventListener('keydown', unmute);
+          document.removeEventListener('click', unmute);
+          document.removeEventListener('mousemove', unmute);
+          document.removeEventListener('touchstart', unmute);
+        }
+        document.addEventListener('keydown', unmute);
+        document.addEventListener('click', unmute);
+        document.addEventListener('mousemove', unmute);
+        document.addEventListener('touchstart', unmute);
+      }
+    }
+    tryPlayVideo();
     bootVideo.addEventListener('ended', () => {
       bootVideo.style.display = 'none';
       dashboard.style.display = 'block';
+      updateBlades();
     });
   </script>
 </body>
