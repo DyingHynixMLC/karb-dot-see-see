@@ -1,133 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Chromebook Identification Wizard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef1f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .wizard {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 400px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: bold;
-    }
-
-    select, input[type="number"] {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    .submit-btn {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    .submit-btn:hover {
-      background: #3a78c2;
-    }
-
-    .results {
-      margin-top: 2rem;
-      background: #f8f9fb;
-      padding: 1rem;
-      border-left: 4px solid #4a90e2;
-      border-radius: 8px;
-    }
-
-    .results strong {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-  </style>
-</head>
-<body>
-
-<div class="wizard">
-  <h2>Chromebook ID Wizard</h2>
-
-  <div class="form-group">
-    <label for="chromeos">ChromeOS Version</label>
-    <input type="number" id="chromeos" placeholder="e.g. 122" min="1" />
-  </div>
-
-  <div class="form-group">
-    <label for="chip">Security Chip</label>
-    <select id="chip">
-      <option value="">Select chip</option>
-      <option value="Ti50">Ti50</option>
-      <option value="Cr50">Cr50</option>
-      <option value="None">None</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="keyrolled">Keyrolled</label>
-    <select id="keyrolled">
-      <option value="">Select status</option>
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="kernel">Kernel Version</label>
-    <select id="kernel">
-      <option value="">Select version</option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </div>
-
-  <button class="submit-btn" onclick="identify()">Identify</button>
-
-  <div class="results" id="results" style="display:none;"></div>
-</div>
-
 <script>
   function identify() {
     const chromeos = parseInt(document.getElementById("chromeos").value);
     const chip = document.getElementById("chip").value;
     const keyrolled = document.getElementById("keyrolled").value === "Yes";
     const kernel = parseInt(document.getElementById("kernel").value);
-
     const resultBox = document.getElementById("results");
 
     if (isNaN(chromeos) || isNaN(kernel) || chip === "" || document.getElementById("keyrolled").value === "") {
@@ -136,39 +12,81 @@
       return;
     }
 
-    const exploits = {
-      SH1mmer:     { minKernel: 0, maxOS: 109 },
-      CryptoSmite: { minKernel: 2, maxOS: 119 },
-      BadRecovery: { minKernel: 3, maxOS: 124 },
-      Icarus:      { minKernel: 4, maxOS: 129 },
-      Br1ck:       { minKernel: 4, maxOS: 131 },
-      Pencil:      { minKernel: 5, maxOS: 999 } // Unpatchable
-    };
-
     const blockedByKeyroll = ["SH1mmer", "Pencil", "Icarus", "Br1ck"];
     const blockedByTi50 = ["Pencil"];
 
-    const validExploits = [];
+    const exploits = {
+      SH1mmer:     { minKernel: 0, maxOS: 109, label: "SH1mmer" },
+      CryptoSmite: { minKernel: 2, maxOS: 119, label: "CryptoSmite" },
+      BadRecovery:{ minKernel: 3, maxOS: 124, label: "BadRecovery" },
+      Icarus:      { minKernel: 4, maxOS: 129, label: "Icarus" },
+      Br1ck:       { minKernel: 4, maxOS: 131, label: "Br1ck" },
+      Pencil:      { minKernel: 5, maxOS: 999, label: "Pencil (Unpatchable)" }
+    };
 
-    for (const [name, { minKernel, maxOS }] of Object.entries(exploits)) {
+    const downgradeRanges = {
+      0: ["SH1mmer", "CryptoSmite", "BadRecovery", "Icarus", "Br1ck", "Pencil"],
+      1: ["SH1mmer", "CryptoSmite", "BadRecovery", "Icarus", "Br1ck", "Pencil"],
+      2: ["CryptoSmite"],
+      3: ["BadRecovery"],
+      4: ["Icarus", "Br1ck"],
+      5: ["Pencil"]
+    };
+
+    const downgradeOSLimits = {
+      SH1mmer:     109,
+      CryptoSmite: 120,
+      BadRecovery: 125,
+      Icarus:      130,
+      Br1ck:       132,
+      Pencil:      999
+    };
+
+    const valid = [];
+    const downgrade = [];
+
+    for (const name in exploits) {
+      const { minKernel, maxOS, label } = exploits[name];
       const kernelOK = kernel >= minKernel;
       const osOK = chromeos <= maxOS;
-      const notKeyrolledBlocked = !keyrolled || !blockedByKeyroll.includes(name);
-      const notTi50Blocked = !(chip === "Ti50" && blockedByTi50.includes(name));
+      const keyrollOK = !keyrolled || !blockedByKeyroll.includes(name);
+      const chipOK = !(chip === "Ti50" && blockedByTi50.includes(name));
 
-      if (kernelOK && osOK && notKeyrolledBlocked && notTi50Blocked) {
-        validExploits.push(name);
+      if (name === "SH1mmer" && (kernel > 1 || chromeos > 111)) continue;
+      if (kernelOK && osOK && keyrollOK && chipOK) {
+        valid.push(label);
+      }
+    }
+
+    const downgrades = downgradeRanges[kernel] || [];
+    for (const name of downgrades) {
+      const maxOS = downgradeOSLimits[name];
+      const keyrollOK = !keyrolled || !blockedByKeyroll.includes(name);
+      const chipOK = !(chip === "Ti50" && blockedByTi50.includes(name));
+
+      if (name === "SH1mmer" && (kernel > 1 || chromeos > 111)) continue;
+
+      if (chromeos > maxOS && keyrollOK && chipOK) {
+        downgrade.push(`${name} + Downgrade`);
       }
     }
 
     resultBox.style.display = "block";
-    if (validExploits.length > 0) {
-      resultBox.innerHTML = `<strong>Possible Exploits:</strong><ul>${validExploits.map(e => `<li>${e}</li>`).join("")}</ul>`;
-    } else {
+
+    if (valid.length === 0 && downgrade.length === 0) {
       resultBox.innerHTML = `<strong>No usable exploits found with the selected configuration.</strong>`;
+      return;
     }
+
+    let html = `<strong>Possible Exploits:</strong>`;
+    if (valid.length > 0) {
+      html += `<ul>${valid.map(e => `<li>${e}</li>`).join("")}</ul>`;
+    }
+
+    if (downgrade.length > 0) {
+      html += `<strong>Possible with Downgrade:</strong><ul>${downgrade.map(e => `<li>${e}</li>`).join("")}</ul>`;
+    }
+
+    resultBox.innerHTML = html;
   }
 </script>
-
-</body>
-</html>
