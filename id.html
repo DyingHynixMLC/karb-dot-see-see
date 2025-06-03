@@ -36,7 +36,7 @@
       font-weight: bold;
     }
 
-    select {
+    select, input[type="number"] {
       width: 100%;
       padding: 0.5rem;
       border-radius: 8px;
@@ -81,17 +81,7 @@
 
   <div class="form-group">
     <label for="chromeos">ChromeOS Version</label>
-    <select id="chromeos">
-      <option value="">Select version</option>
-      <option value="100">100</option>
-      <option value="110">110</option>
-      <option value="115">115</option>
-      <option value="120">120</option>
-      <option value="125">125</option>
-      <option value="130">130</option>
-      <option value="132">132</option>
-      <option value="135">135</option>
-    </select>
+    <input type="number" id="chromeos" placeholder="e.g. 122" min="1" />
   </div>
 
   <div class="form-group">
@@ -138,40 +128,42 @@
     const keyrolled = document.getElementById("keyrolled").value === "Yes";
     const kernel = parseInt(document.getElementById("kernel").value);
 
-    const results = [];
+    const resultBox = document.getElementById("results");
 
-    const exploits = {
-      0: ["SH1mmer"],
-      1: ["SH1mmer"],
-      2: ["CryptoSmite"],
-      3: ["BadRecovery"],
-      4: ["Icarus", "Br1ck"],
-      5: ["Pencil"]
-    };
-
-    const cutoff = {
-      SH1mmer: 110,
-      CryptoSmite: 120,
-      BadRecovery: 125,
-      Icarus: 130,
-      Br1ck: 132,
-      Pencil: 999 // Unpatchable
-    };
-
-    const kernelExploits = exploits[kernel] || [];
-
-    for (const exploit of kernelExploits) {
-      if (keyrolled && ["SH1mmer", "Br1ck", "Icarus", "Pencil"].includes(exploit)) continue;
-      if (chip === "Ti50" && exploit === "Pencil") continue;
-      if (chromeos >= cutoff[exploit]) continue;
-      results.push(exploit);
+    if (isNaN(chromeos) || isNaN(kernel) || chip === "" || document.getElementById("keyrolled").value === "") {
+      resultBox.style.display = "block";
+      resultBox.innerHTML = `<strong>Please fill in all fields.</strong>`;
+      return;
     }
 
-    const resultBox = document.getElementById("results");
-    resultBox.style.display = "block";
+    const exploits = {
+      SH1mmer:     { minKernel: 0, maxOS: 109 },
+      CryptoSmite: { minKernel: 2, maxOS: 119 },
+      BadRecovery: { minKernel: 3, maxOS: 124 },
+      Icarus:      { minKernel: 4, maxOS: 129 },
+      Br1ck:       { minKernel: 4, maxOS: 131 },
+      Pencil:      { minKernel: 5, maxOS: 999 } // Unpatchable
+    };
 
-    if (results.length > 0) {
-      resultBox.innerHTML = `<strong>Possible Exploits:</strong><ul>${results.map(r => `<li>${r}</li>`).join("")}</ul>`;
+    const blockedByKeyroll = ["SH1mmer", "Pencil", "Icarus", "Br1ck"];
+    const blockedByTi50 = ["Pencil"];
+
+    const validExploits = [];
+
+    for (const [name, { minKernel, maxOS }] of Object.entries(exploits)) {
+      const kernelOK = kernel >= minKernel;
+      const osOK = chromeos <= maxOS;
+      const notKeyrolledBlocked = !keyrolled || !blockedByKeyroll.includes(name);
+      const notTi50Blocked = !(chip === "Ti50" && blockedByTi50.includes(name));
+
+      if (kernelOK && osOK && notKeyrolledBlocked && notTi50Blocked) {
+        validExploits.push(name);
+      }
+    }
+
+    resultBox.style.display = "block";
+    if (validExploits.length > 0) {
+      resultBox.innerHTML = `<strong>Possible Exploits:</strong><ul>${validExploits.map(e => `<li>${e}</li>`).join("")}</ul>`;
     } else {
       resultBox.innerHTML = `<strong>No usable exploits found with the selected configuration.</strong>`;
     }
