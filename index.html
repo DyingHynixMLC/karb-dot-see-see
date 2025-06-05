@@ -68,6 +68,24 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
+
+    .blade-tab {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: monospace;
+      transition: background 0.2s;
+    }
+
+    .blade-tab:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .blade-tab.active {
+      background: rgba(0, 175, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -116,64 +134,97 @@
       "retina_detect": true
     });
   </script>
-<div id="xbox-guide" style="
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  color: white;
-  font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
-">
-  <div id="xbox-guide-content" style="
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: 320px;
-    background: rgba(20, 20, 20, 0.9);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    text-align: center;
-    transition: transform 0.3s ease;
+
+  <div id="xbox-guide" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
   ">
-    <h3 style="margin-top: 0; font-weight: 700; font-size: 1.8rem;">Projects</h3>
-    <p style="margin: 1rem 0;">Press <b>M</b> to toggle this guide.</p>
-    <button onclick="document.getElementById('xbox-guide').style.display='none'; resetScale();" style="
-      background: #00afff;
-      border: none;
-      border-radius: 0.5rem;
-      padding: 0.5rem 1.2rem;
-      font-size: 1rem;
-      color: white;
-      cursor: pointer;
-    ">Close</button>
+    <div id="xbox-guide-content" style="
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      width: 320px;
+      background: rgba(20, 20, 20, 0.9);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    ">
+      <h3 style="margin-top: 0; font-weight: 700; font-size: 1.8rem;">Projects</h3>
+      <p style="margin: 1rem 0;">Press <b>M</b> to toggle this guide.</p>
+
+      <div id="blade-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; justify-content: center;">
+        <div class="blade-tab active" onclick="setBlade(0)">[[| Main |]]</div>
+        <div class="blade-tab" onclick="setBlade(1)">[[| Info |]]</div>
+      </div>
+
+      <div id="blade-content-0" class="blade-content" style="display: block;">
+        <p>This is the main blade content.</p>
+      </div>
+      <div id="blade-content-1" class="blade-content" style="display: none;">
+        <p>This is the info blade content.</p>
+      </div>
+
+      <button onclick="document.getElementById('xbox-guide').style.display='none'; resetScale();" style="
+        background: #00afff;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        font-size: 1rem;
+        color: white;
+        cursor: pointer;
+      ">Close</button>
+    </div>
   </div>
-</div>
 
-<script>
-  const guide = document.getElementById('xbox-guide');
-  const content = document.getElementById('xbox-guide-content');
+  <script>
+    const guide = document.getElementById('xbox-guide');
+    const content = document.getElementById('xbox-guide-content');
 
-  function resetScale() {
-    content.style.transform = 'translate(-50%, -50%) scale(1)';
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key.toLowerCase() === 'm') {
-      if (guide.style.display === 'block') {
-        guide.style.display = 'none';
-        resetScale();
-      } else {
-        guide.style.display = 'block';
-        requestAnimationFrame(() => {
-          content.style.transform = 'translate(-50%, -50%) scale(1.16)';
-        });
-      }
+    function resetScale() {
+      content.style.transform = 'translate(-50%, -50%) scale(1)';
     }
-  });
-</script>
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key.toLowerCase() === 'm') {
+        if (guide.style.display === 'block') {
+          guide.style.display = 'none';
+          resetScale();
+        } else {
+          guide.style.display = 'block';
+          requestAnimationFrame(() => {
+            content.style.transform = 'translate(-50%, -50%) scale(1.16)';
+          });
+        }
+      }
+
+      if (guide.style.display === 'block') {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          setBlade((activeBlade + 1) % 2);
+        }
+      }
+    });
+
+    let activeBlade = 0;
+    function setBlade(index) {
+      activeBlade = index;
+      const tabs = document.querySelectorAll('.blade-tab');
+      const contents = document.querySelectorAll('.blade-content');
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+      contents.forEach((div, i) => {
+        div.style.display = i === index ? 'block' : 'none';
+      });
+    }
+  </script>
 
 </body>
 </html>
