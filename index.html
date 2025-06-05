@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png?size=512" type="image/png" sizes="512x512">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>kraeb.cc</title>
+  <link rel="icon" href="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png" type="image/png">
   <style>
     html, body {
       margin: 0;
@@ -12,6 +12,7 @@
       height: 100%;
       overflow: hidden;
       font-family: 'Segoe UI', sans-serif;
+      background: black;
     }
 
     #particles-js {
@@ -19,16 +20,6 @@
       width: 100%;
       height: 100%;
       z-index: -1;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
     }
 
     .card {
@@ -73,8 +64,8 @@
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
       z-index: 1000;
       color: white;
       overflow: hidden;
@@ -84,47 +75,62 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(1.16);
+      transform: translate(-50%, -50%) translateY(100vh);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      transition: transform 0.25s ease-in-out;
+    }
+
+    .blade-wrapper.active {
+      transform: translate(-50%, -50%);
     }
 
     .blade {
-      background: rgba(50, 50, 50, 0.85);
+      background: rgba(40, 40, 40, 0.95);
+      width: 360px;
+      height: 240px;
       border-radius: 1rem;
-      padding: 1.2rem;
-      width: 300px;
-      height: 400px;
-      text-align: center;
-      color: white;
-      box-shadow: inset 0 0 0 2px #222;
+      margin-left: -240px;
+      padding: 1.5rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5), inset 0 0 0 2px #111;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      transition: transform 0.25s ease, z-index 0.25s;
+      cursor: pointer;
     }
 
-    .blade.left, .blade.right {
-      opacity: 0.4;
-      transform: scale(0.9);
+    .blade:first-child {
+      margin-left: 0;
+    }
+
+    .blade.active {
+      transform: scale(1.05);
+      z-index: 10;
+      background: rgba(60, 60, 60, 0.98);
     }
 
     .blade h3 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
 
-    .blade p {
-      font-size: 1rem;
-      margin: 1rem 0;
+    .blade a {
+      color: #00afff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .blade a:hover {
+      text-decoration: underline;
     }
 
     .blade button {
+      margin-top: 1rem;
       background: #00afff;
       border: none;
-      border-radius: 0.5rem;
       padding: 0.5rem 1.2rem;
-      font-size: 1rem;
+      border-radius: 0.5rem;
       color: white;
       cursor: pointer;
     }
@@ -133,34 +139,71 @@
 <body>
   <div id="particles-js"></div>
   <div class="card">
-    <img class="pfp" src="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png?size=512" alt="Profile Picture">
+    <img class="pfp" src="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png" alt="pfp">
     <div class="info">hiya, i'm kraeb</div>
     <div class="info">programmer or something</div>
-    <div class="info">my <a href="https://github.com/DyingHynixMLC" target="_blank">github profile</a></div>
-    <div class="info">my <a href="https://discord.com/users/721608676783423499" target="_blank">discord profile</a></div>
+    <div class="info"><a href="https://github.com/DyingHynixMLC" target="_blank">github profile</a></div>
+    <div class="info"><a href="https://discord.com/users/721608676783423499" target="_blank">discord profile</a></div>
   </div>
 
   <div id="xbox-guide">
-    <div class="blade-wrapper">
-      <div class="blade left">
-        <h3>Friends</h3>
+    <div class="blade-wrapper active" id="blade-wrapper">
+      <div class="blade">
+        <h3>Coming Soon</h3>
+        <p>Another project is on the way.</p>
+      </div>
+      <div class="blade active">
+        <h3>Projects</h3>
+        <a href="https://kraeb.cc/decookiefy" target="_blank">decookiefy</a>
+        <button onclick="hideGuide()">Close Guide (M)</button>
       </div>
       <div class="blade">
-        <h3>Projects</h3>
-        <p>Press <b>M</b> to toggle this guide.</p>
-        <button onclick="document.getElementById('xbox-guide').style.display='none'">Close</button>
+        <h3>Coming Soon</h3>
+        <p>Another project is on the way.</p>
       </div>
-      <div class="blade right">
-        <h3>Settings</h3>
+      <div class="blade">
+        <h3>Coming Soon</h3>
+        <p>Another project is on the way.</p>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
-    const backgrounds = ["background.jpg", "borealis.jpg", "boreaalis.jpg"];
-    const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-    document.body.style.backgroundImage = `url('${randomImage}')`;
+    const guide = document.getElementById('xbox-guide');
+    const wrapper = document.getElementById('blade-wrapper');
+    const blades = Array.from(document.querySelectorAll('.blade'));
+    let activeIndex = 1;
+
+    function showGuide() {
+      guide.style.display = 'block';
+      setTimeout(() => wrapper.classList.add('active'), 10);
+    }
+
+    function hideGuide() {
+      wrapper.classList.remove('active');
+      setTimeout(() => guide.style.display = 'none', 250);
+    }
+
+    function setActive(index) {
+      blades.forEach(b => b.classList.remove('active'));
+      activeIndex = (index + blades.length) % blades.length;
+      blades[activeIndex].classList.add('active');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key.toLowerCase() === 'm') {
+        guide.style.display === 'block' ? hideGuide() : showGuide();
+      } else if (e.key === 'ArrowLeft') {
+        setActive(activeIndex - 1);
+      } else if (e.key === 'ArrowRight') {
+        setActive(activeIndex + 1);
+      }
+    });
+
+    blades.forEach((blade, i) => {
+      blade.addEventListener('click', () => setActive(i));
+    });
 
     particlesJS("particles-js", {
       particles: {
@@ -189,13 +232,6 @@
         }
       },
       retina_detect: true
-    });
-
-    const guide = document.getElementById('xbox-guide');
-    document.addEventListener('keydown', function(e) {
-      if (e.key.toLowerCase() === 'm') {
-        guide.style.display = guide.style.display === 'block' ? 'none' : 'block';
-      }
     });
   </script>
 </body>
