@@ -116,7 +116,6 @@
       "retina_detect": true
     });
   </script>
-<!-- Guide Overlay -->
 <div id="xbox-guide" style="
   display: none;
   position: fixed;
@@ -164,13 +163,10 @@
   document.addEventListener('keydown', function(e) {
     if (e.key.toLowerCase() === 'm') {
       if (guide.style.display === 'block') {
-        // Hide and reset scale
         guide.style.display = 'none';
         resetScale();
       } else {
-        // Show and zoom in
         guide.style.display = 'block';
-        // Allow reflow then scale up for animation
         requestAnimationFrame(() => {
           content.style.transform = 'translate(-50%, -50%) scale(1.16)';
         });
