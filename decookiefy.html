@@ -88,54 +88,64 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script>
-    const backgrounds = ["background.jpg", "borealis.jpg", "boreaalis.jpg"];
-    const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-    document.body.style.backgroundImage = `url('${randomImage}')`;
+<script>
+  const backgrounds = ["background.jpg", "borealis.jpg", "boreaalis.jpg"];
+  const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+  document.body.style.backgroundImage = `url('${randomImage}')`;
 
-    particlesJS("particles-js", {
-      "particles": {
-        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-        "color": { "value": "#ffffff" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.5 },
-        "size": { "value": 3, "random": true },
-        "line_linked": {
-          "enable": true,
-          "distance": 150,
-          "color": "#ffffff",
-          "opacity": 0.4,
-          "width": 1
-        },
-        "move": { "enable": true, "speed": 3 }
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+      "color": { "value": "#ffffff" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.5 },
+      "size": { "value": 3, "random": true },
+      "line_linked": {
+        "enable": true,
+        "distance": 150,
+        "color": "#ffffff",
+        "opacity": 0.4,
+        "width": 1
       },
-      "interactivity": {
-        "events": {
-          "onhover": { "enable": true, "mode": "repulse" },
-          "onclick": { "enable": true, "mode": "push" }
-        },
-        "modes": {
-          "repulse": { "distance": 100 },
-          "push": { "particles_nb": 4 }
-        }
+      "move": { "enable": true, "speed": 3 }
+    },
+    "interactivity": {
+      "events": {
+        "onhover": { "enable": true, "mode": "repulse" },
+        "onclick": { "enable": true, "mode": "push" }
       },
-      "retina_detect": true
-    });
-
-    function convertLink() {
-      const input = document.getElementById('ytInput').value.trim();
-      const match = input.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-      const output = document.getElementById('output');
-
-      if (match && match[1]) {
-        const videoId = match[1];
-        const nocookie = `https://www.youtube-nocookie.com/embed/${videoId}`;
-        output.innerHTML = `<a href="${nocookie}" target="_blank">${nocookie}</a>`;
-      } else {
-        output.textContent = "Invalid YouTube URL.";
+      "modes": {
+        "repulse": { "distance": 100 },
+        "push": { "particles_nb": 4 }
       }
+    },
+    "retina_detect": true
+  });
+
+  function convertLink() {
+    const input = document.getElementById('ytInput').value.trim();
+    const match = input.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    const output = document.getElementById('output');
+
+    if (match && match[1]) {
+      const videoId = match[1];
+      const nocookie = `https://www.youtube-nocookie.com/embed/${videoId}`;
+      output.innerHTML = `<a href="${nocookie}" target="_blank">${nocookie}</a>`;
+
+      const a = document.createElement('a');
+      a.href = nocookie;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      output.textContent = "Invalid YouTube URL.";
     }
-  </script>
+  }
+</script>
+
 
 </body>
 </html>
