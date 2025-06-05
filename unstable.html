@@ -1,95 +1,222 @@
-<style>
-  #xbox-guide {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: none;
-    z-index: 1000;
-    color: white;
-    overflow: hidden;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>kraeb.cc</title>
+  <link rel="icon" href="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png?size=512" type="image/png" sizes="512x512">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-  .blade-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    gap: 0.5rem;
-    width: 900px;
-    max-width: 95vw;
-  }
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
 
-  .blade {
-    background: #111;
-    border-left: 5px solid #107C10; /* Xbox Green */
-    width: 380px;
-    height: 220px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 1rem 1.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
 
-  .blade h3 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    letter-spacing: 0.02em;
-  }
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      width: 400px;
+      height: 450px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      color: white;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
 
-  .blade p {
-    flex-grow: 1;
-    font-size: 1rem;
-    line-height: 1.4;
-    color: #ccc;
-    margin-bottom: 1rem;
-  }
+    .pfp {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      object-fit: cover;
+      border: 3px solid white;
+      margin-bottom: 1rem;
+    }
 
-  .blade button {
-    background: #107C10;
-    border: none;
-    border-radius: 0.3rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    align-self: flex-start;
-  }
+    .info {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
 
-  .blade button:hover {
-    background: #0f5e0f;
-  }
+    .info a {
+      color: #00afff;
+      text-decoration: none;
+    }
 
-  .blade a {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
+    .info a:hover {
+      text-decoration: underline;
+    }
 
-<div id="xbox-guide">
-  <div class="blade-wrapper">
-    <div class="blade">
-      <h3>Placeholder</h3>
-      <p>eta wen</p>
-    </div>
-    <div class="blade">
-      <h3>YouTube NoCookiefier</h3>
-      <p>Linkie Fixie</p>
-      <a href="https://github.com/DyingHynixMLC/decookiefy" target="_blank">
-        <button>View Project</button>
-      </a>
-    </div>
-    <div class="blade">
-      <h3>Settings</h3>
-      <p>Theme, animations, about</p>
-      <button onclick="document.getElementById('xbox-guide').style.display='none'">Close</button>
+    /* Updated xbox-guide styles */
+    #xbox-guide {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(18, 18, 18, 0.95); /* dark gray, almost black */
+      backdrop-filter: none;
+      z-index: 1000;
+      color: white;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .blade-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 0.5rem;
+      width: 900px;
+      max-width: 95vw;
+    }
+
+    .blade {
+      background: #222;
+      border-left: 5px solid #555;
+      width: 220px;
+      height: 380px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .blade h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      letter-spacing: 0.02em;
+    }
+
+    .blade p {
+      flex-grow: 1;
+      font-size: 1rem;
+      line-height: 1.4;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .blade button {
+      background: #555; 
+      border: none;
+      border-radius: 0.3rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      align-self: flex-start;
+    }
+
+    .blade button:hover {
+      background: #777;
+    }
+
+    .blade a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <div class="card">
+    <img class="pfp" src="https://cdn.discordapp.com/avatars/721608676783423499/01f5a25b1d88c75e0a8728b5c222dd86.png?size=512" alt="Profile Picture">
+    <div class="info">hiya, i'm kraeb</div>
+    <div class="info">programmer or something</div>
+    <div class="info">my <a href="https://github.com/DyingHynixMLC" target="_blank">github profile</a></div>
+    <div class="info">my <a href="https://discord.com/users/721608676783423499" target="_blank">discord profile</a></div>
+  </div>
+
+  <div id="xbox-guide">
+    <div class="blade-wrapper">
+      <div class="blade">
+        <h3>Placeholdeeeeeeeeeeeeeer</h3>
+        <p>fr</p>
+      </div>
+      <div class="blade">
+        <h3>YouTube NoCookiefier</h3>
+        <p>Simple cookie remover for YouTube.</p>
+        <a href="https://github.com/DyingHynixMLC/decookiefy" target="_blank">
+          <button>View Project</button>
+        </a>
+      </div>
+      <div class="blade">
+        <h3>Placeholdeeeeeeeeeeer</h3>
+        <p>frfrfr</p>
+        <button onclick="document.getElementById('xbox-guide').style.display='none'">Close</button>
+      </div>
     </div>
   </div>
-</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    const backgrounds = ["background.jpg", "borealis.jpg", "boreaalis.jpg"];
+    const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    document.body.style.backgroundImage = `url('${randomImage}')`;
+
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.4,
+          width: 1
+        },
+        move: { enable: true, speed: 3 }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
+        },
+        modes: {
+          repulse: { distance: 100 },
+          push: { particles_nb: 4 }
+        }
+      },
+      retina_detect: true
+    });
+
+    const guide = document.getElementById('xbox-guide');
+    document.addEventListener('keydown', function(e) {
+      if (e.key.toLowerCase() === 'm') {
+        guide.style.display = guide.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  </script>
+</body>
+</html>
