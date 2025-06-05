@@ -126,21 +126,22 @@
   z-index: 1000;
   color: white;
   font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
 ">
-  <div style="
+  <div id="xbox-guide-content" style="
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
     width: 320px;
     background: rgba(20, 20, 20, 0.9);
     border-radius: 1rem;
-    box-shadow: 0 0 20px #00afff;
     padding: 1.5rem;
     text-align: center;
+    transition: transform 0.3s ease;
   ">
     <h2 style="margin-top: 0; font-weight: 700; font-size: 1.8rem;">Xbox NXE Guide</h2>
     <p style="margin: 1rem 0;">Press <b>M</b> to toggle this guide.</p>
-    <button onclick="document.getElementById('xbox-guide').style.display='none'" style="
+    <button onclick="document.getElementById('xbox-guide').style.display='none'; resetScale();" style="
       background: #00afff;
       border: none;
       border-radius: 0.5rem;
@@ -153,10 +154,27 @@
 </div>
 
 <script>
+  const guide = document.getElementById('xbox-guide');
+  const content = document.getElementById('xbox-guide-content');
+
+  function resetScale() {
+    content.style.transform = 'translate(-50%, -50%) scale(1)';
+  }
+
   document.addEventListener('keydown', function(e) {
     if (e.key.toLowerCase() === 'm') {
-      const guide = document.getElementById('xbox-guide');
-      guide.style.display = (guide.style.display === 'block') ? 'none' : 'block';
+      if (guide.style.display === 'block') {
+        // Hide and reset scale
+        guide.style.display = 'none';
+        resetScale();
+      } else {
+        // Show and zoom in
+        guide.style.display = 'block';
+        // Allow reflow then scale up for animation
+        requestAnimationFrame(() => {
+          content.style.transform = 'translate(-50%, -50%) scale(1.16)';
+        });
+      }
     }
   });
 </script>
