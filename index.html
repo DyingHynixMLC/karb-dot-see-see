@@ -116,6 +116,50 @@
       "retina_detect": true
     });
   </script>
+<!-- Guide Overlay -->
+<div id="xbox-guide" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+">
+  <div style="
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background: rgba(20, 20, 20, 0.9);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px #00afff;
+    padding: 1.5rem;
+    text-align: center;
+  ">
+    <h2 style="margin-top: 0; font-weight: 700; font-size: 1.8rem;">Xbox NXE Guide</h2>
+    <p style="margin: 1rem 0;">Press <b>M</b> to toggle this guide.</p>
+    <button onclick="document.getElementById('xbox-guide').style.display='none'" style="
+      background: #00afff;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+    ">Close</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('keydown', function(e) {
+    if (e.key.toLowerCase() === 'm') {
+      const guide = document.getElementById('xbox-guide');
+      guide.style.display = (guide.style.display === 'block') ? 'none' : 'block';
+    }
+  });
+</script>
 
 </body>
 </html>
