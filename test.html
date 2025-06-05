@@ -97,7 +97,6 @@
 
     .blade {
       background: #222;
-      /* Removed the left border */
       width: 35px; 
       height: 200px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
@@ -106,9 +105,9 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      white-space: normal; /* allow wrapping */
-      overflow-wrap: break-word; /* wrap long words */
-      max-width: 350px; /* cap width */
+      white-space: normal;
+      overflow-wrap: break-word; 
+      max-width: 350px; 
       transition: width 0.3s ease, padding 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -118,14 +117,13 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      width: 100%; /* fill blade width */
+      width: 100%; 
       height: auto;
       padding: 0.5rem 0.2rem;
       align-items: flex-start;
       justify-content: flex-start;
     }
 
-    /* INACTIVE state */
     .blade.inactive {
       width: 35px;
       padding: 0;
@@ -156,8 +154,7 @@
       user-select: none;
     }
 
-    .blade.inactive p,
-    .blade.inactive button {
+    .blade.inactive p {
       display: none;
       margin: 0;
       padding: 0;
@@ -168,7 +165,7 @@
       padding: 1rem 1.2rem;
       white-space: normal;
       cursor: default;
-      max-width: 350px; /* enforce max width */
+      max-width: 350px; 
     }
 
     .blade.active .blade-content {
@@ -194,13 +191,6 @@
       margin-bottom: 1rem;
       display: block;
       word-break: break-word;
-    }
-
-    .blade.active button {
-      font-size: 1rem;
-      display: inline-block;
-      margin-top: auto;
-      white-space: normal;
     }
 
     .blade a {
@@ -232,16 +222,12 @@
         <div class="blade-content">
           <h3>YouTube NoCookiefier</h3>
           <p>Simple cookie remover for YouTube.</p>
-          <a href="https://github.com/DyingHynixMLC/decookiefy" target="_blank">
-            <button>View Project</button>
-          </a>
         </div>
       </div>
       <div class="blade">
         <div class="blade-content">
           <h3>Placeholdeeeeeeeeeeer</h3>
           <p>frfrfr</p>
-          <button onclick="document.getElementById('xbox-guide').style.display='none'">Close</button>
         </div>
       </div>
     </div>
