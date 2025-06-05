@@ -88,16 +88,16 @@
       transform: translate(-50%, -50%);
       display: flex;
       gap: 0.5rem;
-      width: 350px; /* changed from 900px */
+      width: 350px; 
       max-width: 95vw;
-      overflow: hidden; /* clip the extra parts */
+      overflow: hidden; 
       height: 200px;
     }
 
     .blade {
       background: #222;
       border-left: 5px solid #555;
-      width: 35px; /* default inactive width */
+      width: 35px; 
       height: 200px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
       color: white;
@@ -113,31 +113,52 @@
     }
 
     .blade-content {
-      transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      transform-origin: top left;
-      transform: rotate(90deg);
-      width: 200px;
-      height: 35px;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 0.2rem;
+      width: auto;
+      height: auto;
+      padding: 0.5rem 0.2rem;
+      align-items: flex-start;
+      justify-content: flex-start;
     }
 
-    .blade.inactive h3,
-    .blade.inactive p,
-    .blade.inactive button {
+    /* INACTIVE state */
+    .blade.inactive {
+      width: 35px;
+      padding: 0;
+      white-space: nowrap;
+      overflow: visible;
+      cursor: pointer;
+    }
+
+    .blade.inactive .blade-content {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0 0.2rem;
+      width: auto;
+      height: auto;
+    }
+
+    .blade.inactive h3 {
       margin: 0;
       padding: 0;
       white-space: nowrap;
       font-size: 0.85rem;
       line-height: 1;
+      transform-origin: center center;
+      transform: rotate(90deg);
+      transition: none; 
+      user-select: none;
     }
 
+    .blade.inactive p,
     .blade.inactive button {
       display: none;
+      margin: 0;
+      padding: 0;
     }
 
     .blade.active {
@@ -148,25 +169,26 @@
     }
 
     .blade.active .blade-content {
-      transform: none;
-      width: auto;
-      height: auto;
-      padding: 0;
-      gap: 0.5rem;
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 0;
     }
 
     .blade.active h3 {
+      transform: rotate(0deg);
+      transition: none; 
       font-size: 1.6rem;
       margin-bottom: 1rem;
+      user-select: text;
     }
 
     .blade.active p {
       font-size: 1rem;
       color: #ccc;
       margin-bottom: 1rem;
+      display: block;
     }
 
     .blade.active button {
@@ -179,7 +201,6 @@
       text-decoration: none;
       color: inherit;
     }
-
   </style>
 </head>
 <body>
@@ -275,19 +296,31 @@
 
     document.addEventListener('keydown', function(e) {
       if (e.key.toLowerCase() === 'm') {
-        guide.style.display = guide.style.display === 'block' ? 'none' : 'block';
+        guide.style.display = guide.style.display === 'flex' || guide.style.display === 'block' ? 'none' : 'flex';
+        guide.style.flexDirection = 'column';
+        activeIndex = 0;
+        updateActiveBlade();
       }
-      if (guide.style.display === 'block') {
-        if (e.key === 'ArrowRight') {
-          activeIndex = (activeIndex + 1) % blades.length;
-          updateActiveBlade();
-          e.preventDefault();
-        } else if (e.key === 'ArrowLeft') {
+      if(guide.style.display !== 'none'){
+        if(e.key === 'ArrowLeft' || e.key === 'a') {
           activeIndex = (activeIndex - 1 + blades.length) % blades.length;
           updateActiveBlade();
-          e.preventDefault();
+        }
+        if(e.key === 'ArrowRight' || e.key === 'd') {
+          activeIndex = (activeIndex + 1) % blades.length;
+          updateActiveBlade();
+        }
+        if(e.key === 'Escape') {
+          guide.style.display = 'none';
         }
       }
+    });
+
+    blades.forEach((blade, i) => {
+      blade.addEventListener('click', () => {
+        activeIndex = i;
+        updateActiveBlade();
+      });
     });
   </script>
 </body>
