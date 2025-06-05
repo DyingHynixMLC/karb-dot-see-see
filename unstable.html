@@ -81,23 +81,23 @@
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
-.blade-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1.5);
-  transform-origin: center center;
-  display: flex;
-  gap: 0.5rem;
-  width: 350px;
-  max-width: 95vw;
-  overflow: hidden;
-  height: 200px;
-}
+    .blade-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.5);
+      transform-origin: center center;
+      display: flex;
+      gap: 0.5rem;
+      width: 350px;
+      max-width: 95vw;
+      overflow: hidden;
+      height: 200px;
+    }
 
     .blade {
       background: #222;
-      border-left: 5px solid #555;
+      /* Removed the left border */
       width: 35px; 
       height: 200px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
@@ -106,8 +106,9 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      white-space: nowrap;
-      overflow: visible;
+      white-space: normal; /* allow wrapping */
+      overflow-wrap: break-word; /* wrap long words */
+      max-width: 350px; /* cap width */
       transition: width 0.3s ease, padding 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -117,7 +118,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      width: auto;
+      width: 100%; /* fill blade width */
       height: auto;
       padding: 0.5rem 0.2rem;
       align-items: flex-start;
@@ -167,6 +168,7 @@
       padding: 1rem 1.2rem;
       white-space: normal;
       cursor: default;
+      max-width: 350px; /* enforce max width */
     }
 
     .blade.active .blade-content {
@@ -183,6 +185,7 @@
       font-size: 1.6rem;
       margin-bottom: 1rem;
       user-select: text;
+      word-break: break-word;
     }
 
     .blade.active p {
@@ -190,12 +193,14 @@
       color: #ccc;
       margin-bottom: 1rem;
       display: block;
+      word-break: break-word;
     }
 
     .blade.active button {
       font-size: 1rem;
       display: inline-block;
       margin-top: auto;
+      white-space: normal;
     }
 
     .blade a {
