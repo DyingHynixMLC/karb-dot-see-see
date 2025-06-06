@@ -286,19 +286,14 @@
         activeIndex = 0;
         updateActiveBlade();
       }
-      if(e.key === 'ArrowLeft' || e.key === 'a') {
-  if (activeIndex > 0) {
-    activeIndex--;
-    updateActiveBlade();
-  }
+ if(e.key === 'ArrowLeft' || e.key === 'a') {
+  activeIndex = (activeIndex - 1 + blades.length) % blades.length;
+  updateActiveBlade();
 }
 if(e.key === 'ArrowRight' || e.key === 'd') {
-  if (activeIndex < blades.length - 1) {
-    activeIndex++;
-    updateActiveBlade();
-  }
+  activeIndex = (activeIndex + 1) % blades.length;
+  updateActiveBlade();
 }
-
         if(e.key === 'Escape') {
           guide.style.display = 'none';
         }
