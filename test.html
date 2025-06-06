@@ -123,14 +123,21 @@
       align-items: flex-start;
       justify-content: flex-start;
     }
+.blade.inactive h3 {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  line-height: 1;
+  transform-origin: center center;
+  transform: rotate(90deg) translateX(-0.3rem); /*nudge*/
+  transition: none;
+  user-select: none;
+  max-width: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-    .blade.inactive {
-      width: 35px;
-      padding: 0;
-      white-space: nowrap;
-      overflow: visible;
-      cursor: pointer;
-    }
 
     .blade.inactive .blade-content {
       flex-direction: row;
