@@ -6,6 +6,24 @@
   <pre id="output"></pre>
 
   <script>
+    async function spamExceptionWasm(times) {
+  const response = await fetch('exception.wasm');
+  const buffer = await response.arrayBuffer();
+  const module = await WebAssembly.compile(buffer);
+
+  for (let i = 0; i < times; i++) {
+    try {
+      const instance = await WebAssembly.instantiate(module);
+      instance.exports.crash();
+      console.log(`Run ${i + 1}: No exception caught`);
+    } catch (e) {
+      console.log(`Run ${i + 1}: Caught exception`, e);
+    }
+  }
+}
+
+spamExceptionWasm(1000);
+
     const sprays = [];
 for (let i = 0; i < 1000; i++) {
   const buf = new ArrayBuffer(0x1000);
