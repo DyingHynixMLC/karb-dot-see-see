@@ -6,6 +6,15 @@
   <pre id="output"></pre>
 
   <script>
+    const sprays = [];
+for (let i = 0; i < 1000; i++) {
+  const buf = new ArrayBuffer(0x1000);
+  const view = new DataView(buf);
+  for (let j = 0; j < 0x1000; j += 4) {
+    view.setUint32(j, 0x43434343, true);
+  }
+  sprays.push(buf);
+}
     const log = (msg) => {
       document.getElementById("output").textContent += msg + "\n";
     };
