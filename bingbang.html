@@ -29,12 +29,6 @@ for (let i = 0; i < 1000; i++) {
       } catch (e) {
         log("Caught exception: " + e);
 
-        try {
-          instance.exports.receive(e);
-          log("Back in Wasm — UnpackException ran!");
-        } catch (inner) {
-          log("Receive failed: " + inner);
-        }
       }
     })();
   </script>
